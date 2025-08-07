@@ -2,12 +2,32 @@ package db
 
 import (
 	"database/sql"
+	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 func ConnDb() *sql.DB {
-	connStr := "user=postgres dbname=alura_loja password=admin host=localhost sslmode=disable"
+
+	err := godotenv.Load()
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	dbName := os.Getenv("DB_NAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbSSLMode := os.Getenv("DB_SSLMODE")
+
+	connStr := "user=" + dbUser +
+		" dbname=" + dbName +
+		" password=" + dbPassword +
+		" host=" + dbHost +
+		" port=" + dbPort +
+		" sslmode=" + dbSSLMode
 
 	db, err := sql.Open("postgres", connStr)
 
